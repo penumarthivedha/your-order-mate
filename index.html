@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Order Mate</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Clean, friendly, modern typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand-group">
+        <div class="brand-logo" aria-hidden="true">🍱</div>
+        <div>
+          <h1 class="brand-title">Your Order Mate</h1>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <!-- Active Outlet Switcher Button -->
+        <button id="currentOutletBtn" class="pill-btn outlet-pill" title="Click to change canteen outlet">
+          <span class="pill-icon">📍</span>
+          <span id="headerOutletName" class="pill-text">Dosa Plaza</span>
+          <span class="pill-badge">Change</span>
+        </button>
+
+        <!-- Order History Button -->
+        <button id="orderHistoryBtn" class="pill-btn" title="View past orders">
+          <span class="pill-icon">📋</span>
+          <span class="pill-text">My Orders</span>
+          <span id="orderHistoryCount" class="count-badge">0</span>
+        </button>
+
+        <!-- Student Profile Button -->
+        <button id="userProfileBtn" class="pill-btn profile-pill" title="Edit student profile">
+          <span class="pill-icon">👤</span>
+          <span id="headerUserName" class="pill-text">Student</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Application Body -->
+  <main class="app-container">
+    
+    <!-- Left Column: Menu & Search & Filters -->
+    <section class="menu-section">
+      
+      <!-- Outlet Header Banner (Clean: Name & Timings only) -->
+      <div class="outlet-banner">
+        <div class="outlet-info">
+          <h2 id="bannerOutletName">Dosa Plaza</h2>
+          <div class="outlet-meta">
+            <span class="meta-item">🕒 Timings: <strong id="bannerOutletTiming">11:00 AM - 11:00 PM</strong></span>
+          </div>
+        </div>
+        <button id="bannerChangeOutletBtn" class="btn btn-secondary change-outlet-btn">Change Canteen</button>
+      </div>
+
+      <!-- Controls: Search & Category Filter Pills -->
+      <div class="controls-card">
+        <div class="search-wrapper">
+          <span class="search-icon" aria-hidden="true">🔍</span>
+          <input 
+            type="text" 
+            id="searchInput" 
+            class="search-input" 
+            placeholder="Search items in menu..."
+            aria-label="Search menu items"
+          >
+          <button id="clearSearchBtn" class="clear-search-btn" title="Clear search" aria-label="Clear search" hidden>&times;</button>
+        </div>
+
+        <!-- Category Filters -->
+        <div class="category-filters-container">
+          <label class="filter-label">Categories:</label>
+          <div id="categoryFilters" class="category-filters-list" role="tablist">
+            <!-- Populated dynamically by script.js -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Menu Items Grid Header -->
+      <div class="menu-header">
+        <h3 id="menuSectionTitle">Menu</h3>
+        <span id="menuItemCount" class="item-count-text">0 items</span>
+      </div>
+
+      <!-- Menu Items Cards Grid -->
+      <div id="menuGrid" class="menu-grid" aria-live="polite">
+        <!-- Rendered dynamically by script.js -->
+      </div>
+
+      <!-- Empty Menu State (when search has no matches) -->
+      <div id="noResultsState" class="empty-state card" hidden>
+        <div class="empty-icon">🍽️</div>
+        <h4>No matching items found</h4>
+        <p>Try searching for something else or reset your category filter.</p>
+        <button id="resetFiltersBtn" class="btn btn-secondary">Reset Search & Filters</button>
+      </div>
+
+    </section>
+
+    <!-- Right Column: Cart Panel -->
+    <aside class="cart-section">
+      <div class="cart-card">
+        
+        <div class="cart-header">
+          <div class="cart-title-row">
+            <span class="cart-icon" aria-hidden="true">🛒</span>
+            <h3>Your Tray</h3>
+            <span id="cartItemsBadge" class="cart-count-badge">0 items</span>
+          </div>
+          <button id="clearCartBtn" class="text-btn danger-text" title="Clear all items in cart">Clear</button>
+        </div>
+
+        <!-- Empty Cart Message -->
+        <div id="cartEmptyState" class="cart-empty">
+          <div class="empty-tray-art">🥪</div>
+          <h4>Your tray is empty</h4>
+          <p>Add delicious items from the menu to build your order.</p>
+        </div>
+
+        <!-- Active Cart Items List -->
+        <div id="cartItemsList" class="cart-items-list" hidden>
+          <!-- Line items rendered dynamically by script.js -->
+        </div>
+
+        <!-- Cart Financial Breakdown -->
+        <div id="cartSummary" class="cart-summary" hidden>
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <span id="subtotalDisplay">₹0</span>
+          </div>
+          <div class="summary-row text-muted">
+            <span>Packaging</span>
+            <span class="badge-free">FREE</span>
+          </div>
+          <div class="summary-row total-row">
+            <span>Total Payable</span>
+            <span id="totalDisplay" class="total-amount">₹0</span>
+          </div>
+        </div>
+
+        <!-- Place Order Button (Strictly Disabled when cart is empty) -->
+        <div class="cart-actions">
+          <button 
+            id="placeOrderBtn" 
+            class="btn btn-primary btn-block place-order-btn" 
+            disabled
+          >
+            <span>Place Order</span>
+            <span id="placeOrderTotalBadge">₹0</span>
+          </button>
+          <p class="cart-hint">Counter pickup & cash/UPI payment</p>
+        </div>
+
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- ==================== MODALS ==================== -->
+
+  <!-- 1. Profile / Student Identification Modal -->
+  <div id="profileModal" class="modal-overlay" hidden>
+    <div class="modal-dialog card" role="dialog" aria-labelledby="profileModalTitle">
+      <div class="modal-header">
+        <h3 id="profileModalTitle">Student Details</h3>
+        <button type="button" class="modal-close-btn" data-close-modal="profileModal" aria-label="Close modal">&times;</button>
+      </div>
+      <p class="modal-desc">Enter your details so your canteen counter can label your order.</p>
+
+      <form id="profileForm" novalidate>
+        <div class="form-group">
+          <label for="studentNameInput">Full Name <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="studentNameInput" 
+            class="form-input" 
+            placeholder="e.g. Rishitha Sharma" 
+            required
+          >
+          <span id="nameError" class="error-text" hidden>Please enter your name.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="studentPhoneInput">Phone Number (10 digits) <span class="required">*</span></label>
+          <input 
+            type="tel" 
+            id="studentPhoneInput" 
+            class="form-input" 
+            placeholder="e.g. 9876543210" 
+            maxlength="10" 
+            required
+          >
+          <span id="phoneError" class="error-text" hidden>Please enter a valid 10-digit mobile number.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="studentHostelInput">Hostel / Campus Location <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="studentHostelInput" 
+            class="form-input" 
+            placeholder="e.g. Ganga Hostel, Room 204" 
+            required
+          >
+          <span id="hostelError" class="error-text" hidden>Please enter your hostel or campus location.</span>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary btn-block">Save Details</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. Outlet Selector Modal -->
+  <div id="outletModal" class="modal-overlay" hidden>
+    <div class="modal-dialog modal-lg card" role="dialog" aria-labelledby="outletModalTitle">
+      <div class="modal-header">
+        <h3 id="outletModalTitle">Select Canteen</h3>
+        <button type="button" class="modal-close-btn" data-close-modal="outletModal" aria-label="Close modal">&times;</button>
+      </div>
+
+      <div id="outletsGrid" class="outlets-grid">
+        <!-- Rendered dynamically by script.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Switch Outlet Confirmation Modal -->
+  <div id="switchOutletConfirmModal" class="modal-overlay" hidden>
+    <div class="modal-dialog modal-sm card" role="alertdialog" aria-labelledby="confirmSwitchTitle">
+      <div class="confirm-icon-box">⚠️</div>
+      <h3 id="confirmSwitchTitle">Switch Canteen?</h3>
+      <p id="confirmSwitchDesc" class="confirm-desc">
+        Your tray contains items from <strong>Current Outlet</strong>. Switching canteens will clear your current tray.
+      </p>
+      <div class="modal-actions-dual">
+        <button id="cancelSwitchBtn" class="btn btn-secondary">Keep Tray</button>
+        <button id="confirmSwitchBtn" class="btn btn-danger">Yes, Clear & Switch</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Order Confirmation Modal -->
+  <div id="orderConfirmationModal" class="modal-overlay" hidden>
+    <div class="modal-dialog card confirmation-card" role="dialog" aria-labelledby="orderConfirmTitle">
+      <div class="success-icon-bubble">🎉</div>
+      <h3 id="orderConfirmTitle">Order Placed!</h3>
+      <p class="order-id-badge">Order ID: <strong id="confirmOrderNumber">#YOM-0000</strong></p>
+      
+      <div class="confirmation-details-box">
+        <div class="conf-row">
+          <span class="conf-label">Canteen:</span>
+          <span id="confirmOutletName" class="conf-value">-</span>
+        </div>
+        <div class="conf-row">
+          <span class="conf-label">Student:</span>
+          <span id="confirmStudentName" class="conf-value">-</span>
+        </div>
+        <div class="conf-row">
+          <span class="conf-label">Location:</span>
+          <span id="confirmStudentAddress" class="conf-value">-</span>
+        </div>
+        <div class="conf-row">
+          <span class="conf-label">Phone:</span>
+          <span id="confirmStudentPhone" class="conf-value">-</span>
+        </div>
+        <div class="conf-divider"></div>
+        <div class="conf-row">
+          <span class="conf-label">Items:</span>
+          <span id="confirmItemsSummary" class="conf-value">-</span>
+        </div>
+        <div class="conf-row total-highlight">
+          <span class="conf-label">Total Amount:</span>
+          <span id="confirmOrderTotal" class="conf-value text-primary">₹0</span>
+        </div>
+      </div>
+
+      <div class="pickup-estimate">
+        ⏱️ Ready for counter pickup in approximately 15-20 minutes.
+      </div>
+
+      <div class="modal-actions-dual">
+        <button id="viewHistoryFromConfirmBtn" class="btn btn-secondary">Order History</button>
+        <button id="closeConfirmationBtn" class="btn btn-primary">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Order History Modal -->
+  <div id="orderHistoryModal" class="modal-overlay" hidden>
+    <div class="modal-dialog modal-lg card" role="dialog" aria-labelledby="historyModalTitle">
+      <div class="modal-header">
+        <div class="title-with-badge">
+          <h3 id="historyModalTitle">Order History</h3>
+          <span id="historyOrdersCount" class="count-badge">0</span>
+        </div>
+        <button type="button" class="modal-close-btn" data-close-modal="orderHistoryModal" aria-label="Close modal">&times;</button>
+      </div>
+
+      <div id="orderHistoryList" class="order-history-list">
+        <!-- Rendered dynamically by script.js -->
+      </div>
+
+      <div class="history-footer">
+        <button id="clearHistoryBtn" class="text-btn danger-text">Clear History</button>
+        <button type="button" class="btn btn-secondary" data-close-modal="orderHistoryModal">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vanilla JavaScript -->
+  <script src="script.js"></script>
+</body>
+</html>
