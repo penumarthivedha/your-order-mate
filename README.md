@@ -7,7 +7,10 @@
 
 ## 📌 Project Description
 
-**Your Order Mate** is an interactive campus food ordering interface designed for college students. It provides a natural, pleasant, and clean UI without artificial clutter. Students can browse live menus from real campus canteens (**Dosa Plaza**, **MasterChef Canteen**, **Calorie Canteen**, and **Rengcol Food Court**), filter dishes by category, search in real-time, adjust tray quantities, and place orders with instant live total calculations and on-page confirmation dialogs.
+**Your Order Mate**
+
+🔗 **Live Demo:** [Open the app]( https://penumarthivedha.github.io/your-order-mate/)
+ is an interactive campus food ordering interface designed for college students. It provides a natural, pleasant, and clean UI without artificial clutter. Students can browse live menus from real campus canteens (**Dosa Plaza**, **MasterChef Canteen**, **Calorie Canteen**, and **Rengcol Food Court**), filter dishes by category, search in real-time, adjust tray quantities, and place orders with instant live total calculations and on-page confirmation dialogs.
 
 ---
 
